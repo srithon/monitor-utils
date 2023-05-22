@@ -5,11 +5,11 @@
 pub struct Point(u32, u32);
 
 impl Point {
-    fn x(&self) -> u32 {
+    pub fn x(&self) -> u32 {
         self.0
     }
 
-    fn y(&self) -> u32 {
+    pub fn y(&self) -> u32 {
         self.1
     }
 }
