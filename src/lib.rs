@@ -4,7 +4,7 @@ pub mod x11;
 /// A Point represents an x, y coordinate relative to the top-left corner of the virtual screen.
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Point(u32, u32);
 
 impl Point {
@@ -32,7 +32,7 @@ impl std::ops::Add for Point {
 /// Represents a Rectangle lying on a virtual screen.
 /// The distinction between the Rectangle and the Monitor allows us to describe objects which do
 /// not correspond to monitors.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Rect {
     /// Width in pixels.
     width: u32,
@@ -82,7 +82,7 @@ impl Rect {
 }
 
 /// A `Monitor` represents a rectangular graphical display, positioned within a virtual Screen.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Monitor {
     /// The index of the Monitor in a clock-wise ordering of its parent `MonitorSetup`
     order: u32,
@@ -126,6 +126,7 @@ impl Monitor {
 }
 
 /// A `MonitorSetup` represents a group of monitors used in conjunction with one another.
+#[derive(Debug)]
 pub struct MonitorSetup {
     monitors: Vec<Monitor>,
 }
