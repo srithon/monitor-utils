@@ -237,8 +237,3 @@ impl MonitorSetup {
 pub trait LoadMonitors {
     fn load_monitors(&self) -> Vec<Monitor>;
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-}
