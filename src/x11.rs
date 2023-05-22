@@ -58,10 +58,8 @@ impl XRandrMonitorLoader {
     /// Creates an instance of `XRandrMonitorLoader` if `xrandr` is installed and usable;
     /// otherwise, yields an Error.
     pub fn new() -> Result<XRandrMonitorLoader, Error> {
-        let mut child = Command::new("xrandr").arg("--current").spawn()?;
-
-        let exit_status = child.wait()?;
-        let code = exit_status.code();
+        let output = Command::new("xrandr").arg("--current").output()?;
+        let code = output.status.code();
 
         match code {
             Some(0) => Ok(XRandrMonitorLoader {}),
