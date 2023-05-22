@@ -129,19 +129,20 @@ pub struct MonitorSetup {
 
 impl MonitorSetup {
     /// Given an implementor of `LoadMonitors`, yields a `MonitorSetup`.
-    pub fn with_loader(loader: impl LoadMonitors) -> MonitorSetup {
+    pub fn with_loader<E>(loader: impl LoadMonitors<E>) -> Result<MonitorSetup, E> {
         let mut setup = MonitorSetup { monitors: vec![] };
-        setup.reload(loader);
+        setup.reload(loader)?;
 
-        setup
+        Ok(setup)
     }
 
     /// Reloads the list of monitors from the source.
-    pub fn reload(&mut self, loader: impl LoadMonitors) {
-        self.monitors = loader.load_monitors();
+    pub fn reload<E>(&mut self, loader: impl LoadMonitors<E>) -> Result<(), E> {
+        self.monitors = loader.load_monitors()?;
 
         // now, sort them in clockwise order
         self.sort_clockwise();
+        Ok(())
     }
 
     /// Sorts the internal list of monitors in a clockwise order, with further monitors coming
@@ -234,6 +235,6 @@ impl MonitorSetup {
     }
 }
 
-pub trait LoadMonitors {
-    fn load_monitors(&self) -> Vec<Monitor>;
+pub trait LoadMonitors<E> {
+    fn load_monitors(&self) -> Result<Vec<Monitor>, E>;
 }
