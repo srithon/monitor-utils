@@ -59,7 +59,7 @@ impl Rect {
     }
 
     /// Returns the point at the center of the Rectangle.
-    fn center(&self) -> Point {
+    pub fn center(&self) -> Point {
         let raw_midpoint = Point::new(self.width / 2, self.height / 2);
         self.offset + raw_midpoint
     }
