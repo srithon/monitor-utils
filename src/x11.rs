@@ -95,8 +95,8 @@ fn try_monitor_from_xrandr_line(xrandr_line: &str) -> Option<Monitor> {
 
         (|| {
             match captures.get(2).map(|capture| capture.as_str()) {
-                Some("connected") => (),
-                _ => return Err(()),
+                Some("disconnected") | None => return Err(()),
+                _ => (),
             };
 
             let monitor_rectangle = {
