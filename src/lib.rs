@@ -178,7 +178,7 @@ impl MonitorSetup {
     }
 
     /// Yields the monitor which contains the given point.
-    fn monitor_containing_point(&self, point: &Point) -> Option<&Monitor> {
+    pub fn monitor_containing_point(&self, point: &Point) -> Option<&Monitor> {
         self.monitors
             .iter()
             .filter(|m| m.rect.contains_point(&point))
