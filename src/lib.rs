@@ -1,3 +1,6 @@
+#[cfg(feature = "x11")]
+pub mod x11;
+
 /// A Point represents an x, y coordinate relative to the top-left corner of the virtual screen.
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
@@ -215,22 +218,22 @@ impl MonitorSetup {
     }
 
     /// Yields the monitor above the given monitor.
-    pub fn monitor_above(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_above(&self, _monitor: &Monitor) -> Option<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor below the given monitor.
-    pub fn monitor_below(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_below(&self, _monitor: &Monitor) -> Option<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor to the left of the given monitor.
-    pub fn monitor_left_of(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_left_of(&self, _monitor: &Monitor) -> Option<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor to the right of the given monitor.
-    pub fn monitor_right_of(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_right_of(&self, _monitor: &Monitor) -> Option<&Monitor> {
         todo!()
     }
 }

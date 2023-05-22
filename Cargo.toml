@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["x11"]
+x11 = ["dep:regex", "dep:once_cell"]
+
 [dependencies]
-regex = "1.8"
-once_cell = "1.17"
+regex = { version = "1.8", optional = true }
+once_cell = { version = "1.17", optional = true }
