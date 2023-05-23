@@ -10,6 +10,31 @@ use directories::ProjectDirs;
 #[cfg(feature = "global-cache")]
 use std::path::PathBuf;
 
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum MonitorUtilsError {
+    #[error("point out of bounds: {:?}", .0)]
+    PointOutOfBounds(Point),
+
+    #[error("monitor setup is invalid")]
+    InvalidMonitorSetup,
+
+    #[error("failed to read/write cache file")]
+    ReadWriteCache {
+        #[from]
+        source: std::io::Error,
+    },
+
+    #[error("cache cannot be parsed")]
+    ParseCache {
+        #[from]
+        source: miniserde::Error,
+    },
+}
+
+type LibResult<R> = std::result::Result<R, MonitorUtilsError>;
+
 /// A Point represents an x, y coordinate relative to the top-left corner of the virtual screen.
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
@@ -170,15 +195,15 @@ impl MonitorSetup {
     }
 
     #[cfg(feature = "global-cache")]
-    pub fn from_global_cache() -> Result<Self, std::io::Error> {
+    pub fn from_global_cache() -> LibResult<Self> {
         let cache_file = Self::get_cache_file();
         let string = std::fs::read_to_string(cache_file)?;
 
-        Self::from_json(&string).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))
+        Self::from_json(&string).map_err(|e| e.into())
     }
 
     #[cfg(feature = "global-cache")]
-    pub fn to_global_cache(&self) -> Result<(), std::io::Error> {
+    pub fn to_global_cache(&self) -> LibResult<()> {
         let cache_file = Self::get_cache_file();
         std::fs::write(cache_file, miniserde::json::to_string(self))?;
 
@@ -228,16 +253,17 @@ impl MonitorSetup {
     }
 
     /// Yields the monitor which contains the given point.
-    pub fn monitor_containing_point(&self, point: &Point) -> Option<&Monitor> {
+    pub fn monitor_containing_point(&self, point: &Point) -> LibResult<&Monitor> {
         self.monitors
             .iter()
             .filter(|m| m.rect.contains_point(&point))
             .next()
+            .ok_or(MonitorUtilsError::PointOutOfBounds(*point))
     }
 
     /// Given a monitor index and an offset, returns the monitor at the offset index, such that
     /// overflows loop back to the beginning, and underflows loop back from the end.
-    fn monitor_at_offset_index(&self, index: u32, offset: i32) -> Option<&Monitor> {
+    fn monitor_at_offset_index(&self, index: u32, offset: i32) -> LibResult<&Monitor> {
         let num_monitors = self.monitors.len() as u32;
 
         // get rid of any redundant loops
@@ -251,35 +277,36 @@ impl MonitorSetup {
 
         self.monitors
             .get((new_index as u32 % num_monitors) as usize)
+            .ok_or(MonitorUtilsError::InvalidMonitorSetup)
     }
 
     /// Yields the next monitor in a clock-wise traversal of the MonitorSetup.
-    pub fn next_monitor_clockwise(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn next_monitor_clockwise(&self, monitor: &Monitor) -> LibResult<&Monitor> {
         self.monitor_at_offset_index(monitor.order, 1)
     }
 
     /// Yields the next monitor in a counter-clockwise traversal of the MonitorSetup.
-    pub fn next_monitor_counterclockwise(&self, monitor: &Monitor) -> Option<&Monitor> {
+    pub fn next_monitor_counterclockwise(&self, monitor: &Monitor) -> LibResult<&Monitor> {
         self.monitor_at_offset_index(monitor.order, -1)
     }
 
     /// Yields the monitor above the given monitor.
-    pub fn monitor_above(&self, _monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_above(&self, _monitor: &Monitor) -> LibResult<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor below the given monitor.
-    pub fn monitor_below(&self, _monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_below(&self, _monitor: &Monitor) -> LibResult<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor to the left of the given monitor.
-    pub fn monitor_left_of(&self, _monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_left_of(&self, _monitor: &Monitor) -> LibResult<&Monitor> {
         todo!()
     }
 
     /// Yields the monitor to the right of the given monitor.
-    pub fn monitor_right_of(&self, _monitor: &Monitor) -> Option<&Monitor> {
+    pub fn monitor_right_of(&self, _monitor: &Monitor) -> LibResult<&Monitor> {
         todo!()
     }
 }
