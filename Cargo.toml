@@ -11,8 +11,7 @@ x11 = ["dep:regex", "dep:once_cell"]
 serialize = ["dep:miniserde"]
 global-cache = ["dep:directories", "serialize"]
 
-# TODO: make `cli` backend-agnostic
-cli = ["dep:bpaf", "global-cache", "x11"]
+cli = ["dep:bpaf", "global-cache"]
 
 [dependencies]
 regex = { version = "1.8", optional = true }

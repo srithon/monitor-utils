@@ -78,7 +78,15 @@ fn main() -> Result<()> {
     }
 
     if monitor_setup.is_none() {
+        // use a different loader depending on enabled feature
+        #[cfg(feature = "x11")]
         let loader = XRandrMonitorLoader::new()?;
+
+        // Example future code:
+        //
+        // #[cfg(feature = "wayland")]
+        // let loader = WaylandMonitorLoader::new()?;
+
         let setup = MonitorSetup::with_loader(loader)?;
         setup.to_global_cache()?;
         monitor_setup.replace(setup);
