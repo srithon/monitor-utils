@@ -20,12 +20,14 @@ pub enum MonitorUtilsError {
     #[error("monitor setup is invalid")]
     InvalidMonitorSetup,
 
+    #[cfg(feature = "global-cache")]
     #[error("failed to read/write cache file")]
     ReadWriteCache {
         #[from]
         source: std::io::Error,
     },
 
+    #[cfg(feature = "serialize")]
     #[error("cache cannot be parsed")]
     ParseCache {
         #[from]
