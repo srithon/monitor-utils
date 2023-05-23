@@ -184,8 +184,8 @@ impl MonitorSetup {
     }
 
     #[cfg(feature = "serialize")]
-    pub fn from_json(json_string: &str) -> miniserde::Result<Self> {
-        miniserde::json::from_str(json_string)
+    pub fn from_json(json_string: &str) -> LibResult<Self> {
+        miniserde::json::from_str(json_string).map_err(|e| e.into())
     }
 
     #[cfg(feature = "global-cache")]
