@@ -133,7 +133,7 @@ pub struct Monitor {
     crtc: u32,
 
     /// Rectangle representing the Monitor within the virtual screen.
-    rect: Rect,
+    pub rect: Rect,
 }
 
 impl Monitor {
