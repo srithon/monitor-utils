@@ -17,6 +17,7 @@ enum Action {
 #[derive(Debug)]
 struct Options {
     refresh: bool,
+    shell_output: bool,
 
     // actions are pipelined from left to right
     actions: Vec<Action>,
@@ -26,6 +27,12 @@ fn cli() -> OptionParser<Options> {
     let refresh = short('r')
         .long("refresh")
         .help("If specified, refreshes the cache before running actions")
+        .req_flag(true)
+        .fallback(false);
+
+    let shell_output = short('s')
+        .long("shell")
+        .help("If specified, spit out output in POSIX shell variable format, such that it may be sourced")
         .req_flag(true)
         .fallback(false);
 
@@ -55,7 +62,11 @@ fn cli() -> OptionParser<Options> {
 
     let actions = construct!([clockwise, counter_clockwise, center, monitor_at_point()]).many();
 
-    let parser = construct!(Options { refresh, actions });
+    let parser = construct!(Options {
+        shell_output,
+        refresh,
+        actions
+    });
     parser
         .to_options()
         .version(env!("CARGO_PKG_VERSION"))
@@ -131,9 +142,16 @@ fn main() -> Result<()> {
             }
         })?;
 
-    match res {
-        AccumPoint(point) => println!("{:?}", point),
-        AccumMonitor(monitor) => println!("{}", monitor.name()),
+    if options.shell_output {
+        match res {
+            AccumPoint(point) => println!("X={}\nY={}", point.x(), point.y()),
+            AccumMonitor(monitor) => println!("ADAPTER={}", monitor.name()),
+        }
+    } else {
+        match res {
+            AccumPoint(point) => println!("{:?}", point),
+            AccumMonitor(monitor) => println!("{}", monitor.name()),
+        }
     }
 
     Ok(())
