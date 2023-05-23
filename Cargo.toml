@@ -26,3 +26,8 @@ anyhow = { version = "1.0" }
 [[bin]]
 name = "monitor-utils"
 required-features = ["cli"]
+
+[profile.release]
+opt-level = "z"
+strip = true
+lto = true
