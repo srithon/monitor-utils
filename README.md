@@ -1,6 +1,6 @@
 # monitor-utils
 
-`monitor-utils` is a Rust library and binary for writing code that deals with monitors spatially. It provides functionality for working with monitors and their configurations. This README provides an overview of the library's public API, cargo features, and information about the CLI.
+`monitor-utils` is a Rust library and binary for making spatial queries with monitors. It provides functionality for working with monitors and their configurations. This README provides an overview of the library's public API, cargo features, and information about the CLI.
 
 ## Cargo Features
 
