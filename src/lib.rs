@@ -4,6 +4,12 @@ pub mod x11;
 #[cfg(feature = "serialize")]
 use miniserde::{Deserialize, Serialize};
 
+#[cfg(feature = "global-cache")]
+use directories::ProjectDirs;
+
+#[cfg(feature = "global-cache")]
+use std::path::PathBuf;
+
 /// A Point represents an x, y coordinate relative to the top-left corner of the virtual screen.
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
@@ -153,6 +159,30 @@ impl MonitorSetup {
     #[cfg(feature = "serialize")]
     pub fn from_json(json_string: &str) -> miniserde::Result<Self> {
         miniserde::json::from_str(json_string)
+    }
+
+    #[cfg(feature = "global-cache")]
+    fn get_cache_file() -> PathBuf {
+        ProjectDirs::from("com.github", "srithon", "monitor-utils")
+            .expect("Home directory must be valid")
+            .cache_dir()
+            .to_path_buf()
+    }
+
+    #[cfg(feature = "global-cache")]
+    pub fn from_global_cache() -> Result<Self, std::io::Error> {
+        let cache_file = Self::get_cache_file();
+        let string = std::fs::read_to_string(cache_file)?;
+
+        Self::from_json(&string).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))
+    }
+
+    #[cfg(feature = "global-cache")]
+    pub fn to_global_cache(&self) -> Result<(), std::io::Error> {
+        let cache_file = Self::get_cache_file();
+        std::fs::write(cache_file, miniserde::json::to_string(self))?;
+
+        Ok(())
     }
 
     /// Reloads the list of monitors from the source.
