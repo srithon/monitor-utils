@@ -5,19 +5,22 @@ pub mod x11;
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub struct Point(u32, u32);
+pub struct Point {
+    x: u32,
+    y: u32,
+}
 
 impl Point {
     pub fn new(x: u32, y: u32) -> Point {
-        Point(x, y)
+        Point { x, y }
     }
 
     pub fn x(&self) -> u32 {
-        self.0
+        self.x
     }
 
     pub fn y(&self) -> u32 {
-        self.1
+        self.y
     }
 }
 
@@ -25,7 +28,7 @@ impl std::ops::Add for Point {
     type Output = Point;
 
     fn add(self, other: Self) -> Self::Output {
-        Point(self.x() + other.x(), self.y() + other.y())
+        Point::new(self.x() + other.x(), self.y() + other.y())
     }
 }
 
