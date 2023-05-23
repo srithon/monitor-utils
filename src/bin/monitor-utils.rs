@@ -48,6 +48,8 @@ fn cli() -> OptionParser<Options> {
         .help("Given an argument monitor, yields the point at the center of the monitor.")
         .req_flag(Action::MonitorCenter);
 
+    let monitor_actions = construct!([clockwise, counter_clockwise, center]).group_help("These commands each take in a Monitor through the pipeline, and yield either a Point or another Monitor.");
+
     fn monitor_at_point() -> impl Parser<Action> {
         let monitor_at_point = long("at-point").req_flag(()).group_help(
             "Takes 2 arguments: X and Y, and yields the monitor containing the point (X,Y)",
@@ -60,13 +62,14 @@ fn cli() -> OptionParser<Options> {
         construct!(Action::MonitorAtPoint(monitor_at_point, point)).adjacent()
     }
 
-    let actions = construct!([clockwise, counter_clockwise, center, monitor_at_point()]).many();
+    let actions = construct!([monitor_at_point(), monitor_actions]).many().group_help("The following options are commands, which pipeline data from the left of the command-line to the right.");
 
     let parser = construct!(Options {
         shell_output,
         refresh,
         actions
     });
+
     parser
         .to_options()
         .version(env!("CARGO_PKG_VERSION"))
