@@ -8,7 +8,9 @@ edition = "2021"
 [features]
 default = ["x11"]
 x11 = ["dep:regex", "dep:once_cell"]
+serialize = ["dep:miniserde"]
 
 [dependencies]
 regex = { version = "1.8", optional = true }
 once_cell = { version = "1.17", optional = true }
+miniserde = { version = "0.1", optional = true }

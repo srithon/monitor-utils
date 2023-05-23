@@ -1,9 +1,13 @@
 #[cfg(feature = "x11")]
 pub mod x11;
 
+#[cfg(feature = "serialize")]
+use miniserde::{Deserialize, Serialize};
+
 /// A Point represents an x, y coordinate relative to the top-left corner of the virtual screen.
 /// This means that (100, 100) is the point 100 pixels down and 100 pixels to the right of the top
 /// left corner of the virtual screen.
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Point {
     x: u32,
@@ -35,6 +39,7 @@ impl std::ops::Add for Point {
 /// Represents a Rectangle lying on a virtual screen.
 /// The distinction between the Rectangle and the Monitor allows us to describe objects which do
 /// not correspond to monitors.
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Rect {
     /// Width in pixels.
@@ -85,6 +90,7 @@ impl Rect {
 }
 
 /// A `Monitor` represents a rectangular graphical display, positioned within a virtual Screen.
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Monitor {
     /// The index of the Monitor in a clock-wise ordering of its parent `MonitorSetup`
@@ -129,6 +135,7 @@ impl Monitor {
 }
 
 /// A `MonitorSetup` represents a group of monitors used in conjunction with one another.
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[derive(Debug)]
 pub struct MonitorSetup {
     monitors: Vec<Monitor>,
@@ -141,6 +148,11 @@ impl MonitorSetup {
         setup.reload(loader)?;
 
         Ok(setup)
+    }
+
+    #[cfg(feature = "serialize")]
+    pub fn from_json(json_string: &str) -> miniserde::Result<Self> {
+        miniserde::json::from_str(json_string)
     }
 
     /// Reloads the list of monitors from the source.
