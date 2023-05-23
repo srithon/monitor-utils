@@ -239,6 +239,9 @@ impl MonitorSetup {
     }
 }
 
+/// Trait which abstracts loading the list of monitors from the respective environment. By
+/// implementing this trait, you can use the library's functionality for arbitrary windowing
+/// systems.
 pub trait LoadMonitors<E> {
     fn load_monitors(&self) -> Result<Vec<Monitor>, E>;
 }
