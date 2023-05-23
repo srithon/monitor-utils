@@ -1,6 +1,8 @@
 # monitor-utils
 
-`monitor-utils` is a Rust library and binary for making spatial queries with monitors. It provides functionality for working with monitors and their configurations. This README provides an overview of the library's public API, cargo features, and information about the CLI.
+`monitor-utils` is a Rust library and binary for making geometric/spatial queries on monitors.
+It provides functionality for working with monitors and their configurations.
+This README provides an overview of the library's public API, cargo features, and information about the CLI.
 
 ## Cargo Features
 
@@ -23,7 +25,8 @@ Represents a rectangle lying on a virtual screen.
 
 ### `LoadMonitors` trait
 
-A trait that abstracts loading the list of monitors from the respective environment. By implementing this trait, you can use the library's functionality for arbitrary windowing systems.
+A trait that abstracts loading the list of monitors from the respective environment.
+By implementing this trait, you can use the library's functionality for arbitrary windowing systems.
 
 #### Methods
 
@@ -54,7 +57,8 @@ Represents a group of monitors used in conjunction with one another.
 
 ## CLI Usage
 
-The `monitor-utils` CLI has a unique interface for interacting with the library. It allows you to perform various actions and chain them together using a pipeline-like syntax.
+The `monitor-utils` CLI has a unique interface for interacting with the library.
+It allows you to perform various actions and chain them together using a pipeline-like syntax.
 
 ### Usage
 
@@ -98,7 +102,8 @@ Y=384
 
 ### Real Application Example
 
-The `monitor-utils` CLI can be used in conjunction with `xdotool` to perform actions based on monitor configurations. For example, you can use it to move your cursor to the center of the next monitor.
+The `monitor-utils` CLI can be used in conjunction with `xdotool` to perform actions based on monitor configurations.
+For example, you can use it to move your cursor to the center of the next monitor.
 
 ```bash
 # Get the X and Y coordinates of the mouse
@@ -111,4 +116,5 @@ xdotool mousemove $X $Y
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
+See the [LICENSE](LICENSE) file for details.
