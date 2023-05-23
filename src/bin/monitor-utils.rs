@@ -32,7 +32,7 @@ fn cli() -> OptionParser<Options> {
 
     let shell_output = short('s')
         .long("shell")
-        .help("If specified, spit out output in POSIX shell variable format, such that it may be sourced")
+        .help("If specified, spit out output in POSIX shell variable format, such that it may be eval'd")
         .req_flag(true)
         .fallback(false);
 
