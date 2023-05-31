@@ -1,4 +1,4 @@
-use monitor_utils::{x11::XRandrMonitorLoader, Monitor, MonitorSetup, Point};
+use monitor_utils::{x11::XRandrMonitorLoader, Monitor, MonitorSetup, Point, Rect};
 
 use bpaf::{construct, long, positional, short, OptionParser, Parser};
 
@@ -12,6 +12,7 @@ enum Action {
     NextMonitorClockwise,
     NextMonitorCounterClockwise,
     MonitorCenter,
+    MonitorGeometry,
 }
 
 #[derive(Debug)]
@@ -48,7 +49,11 @@ fn cli() -> OptionParser<Options> {
         .help("Given an argument monitor, yields the point at the center of the monitor.")
         .req_flag(Action::MonitorCenter);
 
-    let monitor_actions = construct!([clockwise, counter_clockwise, center]).group_help("These commands each take in a Monitor through the pipeline, and yield either a Point or another Monitor.");
+    let geometry = long("geometry")
+        .help("Given an argument monitor, yields the geometry of the monitor.")
+        .req_flag(Action::MonitorGeometry);
+
+    let monitor_actions = construct!([clockwise, counter_clockwise, center, geometry]).group_help("These commands each take in a Monitor through the pipeline, and yield either a Point or another Monitor.");
 
     fn monitor_at_point() -> impl Parser<Action> {
         let monitor_at_point = long("at-point").req_flag(()).group_help(
@@ -112,6 +117,7 @@ fn main() -> Result<()> {
     enum Accumulator<'a> {
         AccumPoint(Point),
         AccumMonitor(&'a Monitor),
+        AccumRect(Rect),
     }
 
     use Accumulator::*;
@@ -140,6 +146,7 @@ fn main() -> Result<()> {
                             .unwrap(),
                     )),
                     MonitorCenter => Ok(AccumPoint(monitor.rect.center())),
+                    MonitorGeometry => Ok(AccumRect(monitor.rect.clone())),
                     _ => unreachable!(),
                 }
             }
@@ -149,11 +156,19 @@ fn main() -> Result<()> {
         match res {
             AccumPoint(point) => println!("X={}\nY={}", point.x(), point.y()),
             AccumMonitor(monitor) => println!("ADAPTER={}", monitor.name()),
+            AccumRect(rect) => println!(
+                "X_OFFSET={}\nY_OFFSET={}\nWIDTH={}\nHEIGHT={}",
+                rect.offset().x(),
+                rect.offset().y(),
+                rect.width(),
+                rect.height(),
+            ),
         }
     } else {
         match res {
             AccumPoint(point) => println!("{:?}", point),
             AccumMonitor(monitor) => println!("{}", monitor.name()),
+            AccumRect(rect) => println!("{:?}", rect),
         }
     }
 
