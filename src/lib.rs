@@ -105,6 +105,22 @@ impl Rect {
         self.offset + raw_midpoint
     }
 
+    /// Returns the width of the Rectangle in pixels.
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    /// Returns the height of the Rectangle in pixels.
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
+    /// Returns the offset of the Rectangle's top-left point relative to the top-left corner of the
+    /// virtual screen.
+    pub fn offset(&self) -> Point {
+        self.offset
+    }
+
     /// Returns `true` if the Rectangle is "empty", otherwise `false`.
     /// The definition of `empty` still has to be defined.
     fn is_empty(&self) -> bool {
