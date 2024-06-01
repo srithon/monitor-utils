@@ -65,7 +65,8 @@ It allows you to perform various actions and chain them together using a pipelin
 ```plaintext
 CLI for monitor-utils
 
-Usage: [-s] [-r] [--at-point <X> <Y> | (--clockwise | --counter-clockwise | --center)]...
+Usage: [-s] [-r] [--at-point <X> <Y> | (--clockwise | --counter-clockwise | --center |
+--geometry)]...
 
 Available options:
     -s, --shell      If specified, spit out output in POSIX shell variable format, such that it may
@@ -84,6 +85,7 @@ Available options:
         --counter-clockwise  Given an argument monitor, yields the next monitor in a
                      counter-clockwise rotation.
         --center     Given an argument monitor, yields the point at the center of the monitor.
+        --geometry   Given an argument monitor, yields the geometry of the monitor.
 
 
     -h, --help       Prints help information
@@ -93,11 +95,16 @@ Available options:
 ### Pipeline Example
 
 ```plaintext
-$ monitor-utils --at-point 10 10 --clockwise --center
-Point { x: 2432, y: 384 }
-$ monitor-utils --shell --at-point 10 10 --clockwise --center
-X=2432
-Y=384
+$ monitor-utils --at-point 800 1600 --clockwise --center
+Point { x: 3840, y: 1080 }
+$ monitor-utils --shell --at-point 800 1600 --clockwise --center
+X=3840
+Y=1080
+$ monitor-utils --shell --at-point 800 1600 --clockwise --geometry
+X_OFFSET=1920
+Y_OFFSET=0
+WIDTH=3840
+HEIGHT=2160
 ```
 
 ### Real Application Example
