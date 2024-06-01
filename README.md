@@ -4,57 +4,6 @@
 It provides functionality for working with monitors and their configurations.
 This README provides an overview of the library's public API, cargo features, and information about the CLI.
 
-## Cargo Features
-
-- `default`: By default, only the `x11` feature is enabled.
-- `x11`: Enables the `x11` module, which contains a `LoadMonitors` implementation using `XRandr`.
-- `serialize`: Uses `miniserde` to serialize/deserialize `MonitorSetup`.
-- `global-cache`: Uses `serialize` to read/write setup from a global cache.
-- `cli`: Enables compilation of the binary: `bin/monitor-utils`.
-
-## Public API
-
-### `Rect` struct
-
-Represents a rectangle lying on a virtual screen.
-
-#### Methods
-
-- `center() -> Point`: Returns the point at the center of the `Rect`.
-    - this can be used in conjunction with `Monitor` to get the point at the center of a `Monitor`
-
-### `LoadMonitors` trait
-
-A trait that abstracts loading the list of monitors from the respective environment.
-By implementing this trait, you can use the library's functionality for arbitrary windowing systems.
-
-#### Methods
-
-- `load_monitors() -> Result<Vec<Monitor>, E>`: Loads the list of monitors and returns a vector of `Monitor` instances. Generic over the Error type.
-
-### `MonitorSetup` struct
-
-Represents a group of monitors used in conjunction with one another.
-
-#### Methods
-
-- `with_loader(loader: impl LoadMonitors<E>) -> Result<MonitorSetup, E>`: Creates a `MonitorSetup` instance using the provided `LoadMonitors` implementation.
-- `reload(loader: impl LoadMonitors<E>) -> Result<(), E>`: Reloads the monitor setup using the provided `LoadMonitors` implementation.
-
-- `from_json(json_string: &str) -> Result<Self>`: (`serialize` feature) Creates a `MonitorSetup` instance by deserializing from a JSON string.
-
-- `from_global_cache() -> Result<Self>`: (`global-cache` feature) Creates a `MonitorSetup` instance by reading from the global cache.
-- `to_global_cache() -> Result<()>`: (`global-cache` feature) Writes the `MonitorSetup` instance to the global cache.
-
-- `monitor_containing_point(point: &Point) -> Result<&Monitor>`: Returns the monitor that contains the given point.
-- `next_monitor_clockwise(monitor: &Monitor) -> Result<&Monitor>`: Returns the next monitor in a clockwise traversal of the `MonitorSetup`.
-- `next_monitor_counterclockwise(monitor: &Monitor) -> Result<&Monitor>`: Returns the next monitor in a counterclockwise traversal of the `MonitorSetup`.
-
-- TODO: `monitor_above(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor above the given monitor.
-- TODO: `monitor_below(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor below the given monitor.
-- TODO: `monitor_left_of(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor to the left of the given monitor.
-- TODO: `monitor_right_of(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor to the right of the given monitor.
-
 ## CLI Usage
 
 The `monitor-utils` CLI has a unique interface for interacting with the library.
@@ -120,6 +69,57 @@ eval $(monitor-utils --at-point $X $Y --clockwise --center)
 # Move the mouse to the center of the next monitor
 xdotool mousemove $X $Y
 ```
+
+## Cargo Features
+
+- `default`: By default, only the `x11` feature is enabled.
+- `x11`: Enables the `x11` module, which contains a `LoadMonitors` implementation using `XRandr`.
+- `serialize`: Uses `miniserde` to serialize/deserialize `MonitorSetup`.
+- `global-cache`: Uses `serialize` to read/write setup from a global cache.
+- `cli`: Enables compilation of the binary: `bin/monitor-utils`.
+
+## Public API
+
+### `Rect` struct
+
+Represents a rectangle lying on a virtual screen.
+
+#### Methods
+
+- `center() -> Point`: Returns the point at the center of the `Rect`.
+    - this can be used in conjunction with `Monitor` to get the point at the center of a `Monitor`
+
+### `LoadMonitors` trait
+
+A trait that abstracts loading the list of monitors from the respective environment.
+By implementing this trait, you can use the library's functionality for arbitrary windowing systems.
+
+#### Methods
+
+- `load_monitors() -> Result<Vec<Monitor>, E>`: Loads the list of monitors and returns a vector of `Monitor` instances. Generic over the Error type.
+
+### `MonitorSetup` struct
+
+Represents a group of monitors used in conjunction with one another.
+
+#### Methods
+
+- `with_loader(loader: impl LoadMonitors<E>) -> Result<MonitorSetup, E>`: Creates a `MonitorSetup` instance using the provided `LoadMonitors` implementation.
+- `reload(loader: impl LoadMonitors<E>) -> Result<(), E>`: Reloads the monitor setup using the provided `LoadMonitors` implementation.
+
+- `from_json(json_string: &str) -> Result<Self>`: (`serialize` feature) Creates a `MonitorSetup` instance by deserializing from a JSON string.
+
+- `from_global_cache() -> Result<Self>`: (`global-cache` feature) Creates a `MonitorSetup` instance by reading from the global cache.
+- `to_global_cache() -> Result<()>`: (`global-cache` feature) Writes the `MonitorSetup` instance to the global cache.
+
+- `monitor_containing_point(point: &Point) -> Result<&Monitor>`: Returns the monitor that contains the given point.
+- `next_monitor_clockwise(monitor: &Monitor) -> Result<&Monitor>`: Returns the next monitor in a clockwise traversal of the `MonitorSetup`.
+- `next_monitor_counterclockwise(monitor: &Monitor) -> Result<&Monitor>`: Returns the next monitor in a counterclockwise traversal of the `MonitorSetup`.
+
+- TODO: `monitor_above(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor above the given monitor.
+- TODO: `monitor_below(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor below the given monitor.
+- TODO: `monitor_left_of(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor to the left of the given monitor.
+- TODO: `monitor_right_of(monitor: &Monitor) -> Result<&Monitor>`: Returns the monitor to the right of the given monitor.
 
 ## License
 
