@@ -96,7 +96,7 @@ impl Rect {
         let y_min = offset.y();
         let y_max = y_min + self.height;
 
-        (point.x() >= x_min && point.x() <= x_max) && (point.y() >= y_min && point.y() <= y_max)
+        (point.x() >= x_min && point.x() < x_max) && (point.y() >= y_min && point.y() < y_max)
     }
 
     /// Returns the point at the center of the Rectangle.
